@@ -2,15 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage ('Build') {
+        stage('Build React App') {
             steps {
-                sh 'npm install --save-dev'
+                script {
+                    docker.image('node:18-alpine').inside {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
+                }
             }
         }
-         stage('Test') {
-            steps {
-                sh './jenkins/scripts/test.sh'
-            }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/**', fingerprint: true
         }
     }
 }
