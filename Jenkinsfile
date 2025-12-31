@@ -2,6 +2,19 @@ pipeline {
     agent any
 
     stages {
+
+        stage('Debug Workspace') {
+            steps {
+                sh '''
+                pwd
+                echo "==== LIST FILES ===="
+                ls -la
+                echo "==== CHECK DOCKERFILE ===="
+                ls -lh Dockerfile || echo "Dockerfile NOT FOUND"
+                '''
+            }
+        }
+
         stage('Build Image') {
             steps {
                 sh '''
