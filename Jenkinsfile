@@ -2,21 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build Image') {
             steps {
-                script {
-                    docker.build("simple-node-js-react-npm-app:latest")
-                }
+                sh '''
+                docker build -t simple-node-js-react-npm-app:latest .
+                '''
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run Container') {
             steps {
-                script {
-                    sh "docker rm -f react-app || true"
-                    docker.image("simple-node-js-react-npm-app:latest")
-                          .run("--name react-app -d -p 3001:3000")
-                }
+                sh '''
+                docker rm -f react-app || true
+                docker run -d --name react-app -p 3001:3000 simple-node-js-react-npm-app:latest
+                '''
             }
         }
     }
